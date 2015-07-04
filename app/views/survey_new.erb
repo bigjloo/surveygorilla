@@ -1,0 +1,50 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+  $(document).ready(function(){
+
+    var survey_id= $('#survey').data("survey-id")
+    $('#add_question').on("click", function(e){
+      e.preventDefault();
+      $('.questions').append("<li><textarea class= 'question' rows= '4' cols= '50'></textarea><br><button id='addchoices'>+</button><div class='choice'></div></li>");
+    });
+
+    $('#addchoices').on("click", function(e){
+      e.preventDefault();
+      alert("HEY!");
+      $('.choice').append("<input class='answer' type='text'><br>");
+    });
+
+    $('#submit').on('click', function(){
+      var question= $('.question').val();
+      var answer_array= [];
+
+      $('.answer').each(function(){
+        answer_array.push($('.answer:first').val());
+        $('.answer:first').removeClass('answer');
+      });
+
+      $.ajax({
+        type: "post",
+        url: "/survey/" + survey_id,
+        data: {"question": question, "answer": answer_array}
+      });
+    });
+
+  });
+</script>
+</head>
+<body>
+  <div class= 'container'>
+  <h2 id="survey" data-survey-id= <%= @survey.id %> >Survey Form</h2>
+  <button id="add_question">+Q</button>
+  <div>
+    <ol class= 'questions'>
+    </ol>
+  </div>
+  <button id= "submit">submit</button>
+  </div>
+</body>
+</html>
+
